@@ -30,6 +30,15 @@ interface Post {
  * Usamos 'async' para indicar que la función maneja procesos de llamadas a APIS.
  * 'Promise<void>' indica que la función no retorna un valor, sino una promesa vacía.
  */
+
+interface Comment {
+  postId: number;
+  id: number;
+  name: string;
+  email: string;
+  body: string;
+}
+
 const fetchSinglePost = async (id: number): Promise<void> => {
   // Aplicamos un estilo visual a la consola si estamos en modo debug.
   if (IS_DEBUG_MODE) {
@@ -120,7 +129,6 @@ const createNewPost = async (): Promise<void> => {
  * 2. Recuerda que la respuesta es una LISTA (Array) de objetos Comment.
  * 3. Usa un bucle o método de array (como .forEach) para mostrar los datos.
  */
-/**
 /**
  * RETO DE LABORATORIO: Obtener recursos anidados (Comments)
  */
