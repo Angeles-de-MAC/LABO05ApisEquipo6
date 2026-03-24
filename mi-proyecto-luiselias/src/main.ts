@@ -4,6 +4,56 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import { setupCounter } from './counter.ts'
 
+import { createClient } from '@supabase/supabase-js'
+
+/**
+* PASO 1: CONFIGURACIÓN DE CONEXIÓN
+* Sustituye estos valores con los de tu proyecto en Supabase (Project Settings > API)
+*/
+const SUPABASE_URL: string = "https://midwvsvckjgmtskhrqmj.supabase.co";
+const SUPABASE_KEY: string = "sb_publishable_udN63PDTk4djfVSOtDqeng_91ay7IPG";
+/**
+*/
+/* PASO 2: INICIALIZACIÓN DEL CLIENTE
+* Creamos el objeto que nos permite hablar con la base de datos.
+*/
+
+// DESCOMENTAR LA LINEA DE ABAJO
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+/**
+* PASO 3: INTERFAZ DE DATOS
+* Definimos la estructura exacta de la tabla que vemos en tu imagen.
+*/
+interface Semestre {
+  id: number;
+  numero: number;
+}
+
+const listaSemestres: Semestre[] = [];
+
+const getSemestres = async (): Promise<void> => {
+  const { data, error } = await supabase.from('semestre').select('*');
+
+  if (error) {
+    console.error('Error al obtener los semestres:', error.message);
+    return;
+  }
+
+  const listaSemestres: Semestre[] = data as Semestre[];
+
+  listaSemestres.forEach(semestre => {
+    const option = document.createElement('option');
+    option.value = semestre.id.toString();
+    option.textContent = semestre.numero.toString();
+    document.querySelector<HTMLSelectElement>('#semestres')!.appendChild(option);
+  });
+
+  console.log(data);
+  console.table(listaSemestres);
+}
+
+getSemestres();
+
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <section id="center">
   <div class="hero">
@@ -54,6 +104,12 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 </section>
 
 <div class="ticks"></div>
+
+<section id="semestres">
+  <h2>Semestres</h2>
+  <div id="lista-semestres"></div>
+</section>
+
 <section id="spacer"></section>
 `
 
